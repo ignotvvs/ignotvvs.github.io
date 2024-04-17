@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Moja aplikacja PWA</title>
+<!-- Podłączanie stylów Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="white"/>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />  
+<link rel="apple-touch-icon" href="images/hello-icon-152.png">   
+<meta name="theme-color" content="white"/>  
+<meta name="apple-mobile-web-app-capable" content="yes">  
+<meta name="apple-mobile-web-app-status-bar-style" content="black"> 
+<meta name="apple-mobile-web-app-title" content="Hello World"> 
+<meta name="msapplication-TileImage" content="images/hello-icon-144.png">  
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<style>
+    #mapid {
+        height: 400px;
+    }
+</style>
+</head>
+<body>
+<!-- Strona główna -->
+<div id="home" class="container">
+<h1 class="mt-5">Moja aplikacja PWA</h1>
+<p>Dane autorów</p>
+<ul>
+<li>Autor 1</li>
+<li>Autor 2</li>
+<!-- Dodaj więcej autorów, jeśli jest to konieczne -->
+</ul>
+<p>Menu:</p>
+<ul>
+<li><a href="#" class="btn btn-primary" onclick="showMap()">Mapa</a></li>
+<li><a href="#" class="btn btn-primary" onclick="activateSOS()">SOS</a></li>
+</ul>
+</div>
+ 
+<!-- Mapa -->
+<div id="map" class="container" style="display: none;">
+<h1 class="mt-5">Mapa</h1>
+<div id="mapid"></div>
+<button class="btn btn-secondary mt-3" onclick="showHome()">Powrót</button>
+<script>
+        var map = L.map('mapid').setView([50.06914, 19.9547], 17);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+</script>
+</div>
+ 
+<!-- Funkcja SOS -->
+<div id="sos" class="container" style="display: none;">
+<h1 class="mt-5">SOS</h1>
+<button class="btn btn-danger" onclick="vibrate()">Wyślij SOS</button>
+<button class="btn btn-secondary mt-3" onclick="showHome()">Powrót</button>
+<script>
+        function vibrate() {
+            if ("vibrate" in navigator) {
+                navigator.vibrate([100, 100, 100, 300, 300, 300, 100, 100, 100]);
+            } else {
+                console.log("Twoje urządzenie nie obsługuje funkcji wibracji.");
+            }
+        }
+</script>
+</div>
+ 
+<script>
+    function showMap() {
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('sos').style.display = 'none';
+    }
+ 
+    function activateSOS() {
+        document.getElementById('home').style.display = 'none';
+        document.getElementById('map').style.display = 'none';
+        document.getElementById('sos').style.display = 'block';
+    }
+ 
+    function showHome() {
+        document.getElementById('home').style.display = 'block';
+        document.getElementById('map').style.display = 'none';
+        document.getElementById('sos').style.display = 'none';
+    }
+ 
+    // Rejestracja serwisu
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
